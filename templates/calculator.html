@@ -1,0 +1,70 @@
+<!DOCTYPE html5>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(':button').click(function() {
+					if($(this).hasClass('num')) {
+						changeDisplay($(this).text());
+						// $('#display').text($(this).text());
+					}
+				});
+			});
+
+			function changeDisplay(input) {
+				oldNum = $('#display').text();
+
+				if (+(oldNum) == 0) {
+					$('#display').text(input);
+				} else {
+					$('#display').text(oldNum + input);
+				}
+			}
+
+			function add(a, b) {
+				$.get(
+					'/add',
+					{a: a, b: b},
+					function(data) {
+						$('#display').text(data['result']);
+						console.log(data['result']);
+					}
+				);
+			}
+		</script>
+	</head>
+
+	<body>
+		<h1 id="display">0</h1>
+
+		<table>
+			<tr>
+				<td><button id="seven" class="num">7</button></td>
+				<td><button id="eight" class="num">8</button></td>
+				<td><button id="nine" class="num">9</button></td>
+				<td><button id="div" class="">/</button></td>
+			</tr>
+			<tr>
+				<td><button id="four" class="num">4</button></td>
+				<td><button id="five" class="num">5</button></td>
+				<td><button id="six" class="num">6</button></td>
+				<td><button id="mult" class="">x</button></td>
+			</tr>
+			<tr>
+				<td><button id="one" class="num">1</button></td>
+				<td><button id="two" class="num">2</button></td>
+				<td><button id="three" class="num">3</button></td>
+				<td><button id="minus" class="">-</button></td>
+			</tr>
+			<tr>
+				<td><button id="zero" class="num">0</button></td>
+				<td><button id="point" class="">.</button></td>
+				<td><button id="equals" class="">=</button></td>
+				<td><button id="plus" class="">+</button></td>
+			</tr>
+		</table>
+
+		<button onclick="add(1,2)">Add 1 + 2</button>
+	</body>
+</html>
