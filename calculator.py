@@ -14,14 +14,44 @@ def calculator():
 
 
 class Add(Resource):
-
     def get(self):
         a = request.args.get('a')
         b = request.args.get('b')
         result = Decimal(a) + Decimal(b)
         return {'result': float(result)}
 
+class Subtract(Resource):
+    def get(self):
+        a = request.args.get('a')
+        b = request.args.get('b')
+        result = Decimal(a) - Decimal(b)
+        return {'result': float(result)}
+
+class Multiply(Resource):
+    def get(self):
+        a = request.args.get('a')
+        b = request.args.get('b')
+        result = Decimal(a) * Decimal(b)
+        return {'result': float(result)}
+
+class Divide(Resource):
+    def get(self):
+        a = request.args.get('a')
+        b = request.args.get('b')
+        result = Decimal(a) / Decimal(b)
+        return {'result': float(result)}
+
+class Negative(Resource):
+    def get(self):
+        a = request.args.get('a')
+        result = Decimal(a) * -1
+        return {'result': float(result)}
+
 api.add_resource(Add, '/add')
+api.add_resource(Subtract, '/subtract')
+api.add_resource(Multiply, '/multiply')
+api.add_resource(Divide, '/divide')
+api.add_resource(Negative, '/negative')
 
 if __name__ == "__main__":
     if 'C9_USER' in os.environ:
