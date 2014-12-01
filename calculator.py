@@ -1,3 +1,5 @@
+import os
+
 from decimal import *
 from flask import Flask, render_template, request
 from flask.ext.restful import Resource, Api
@@ -22,4 +24,11 @@ class Add(Resource):
 api.add_resource(Add, '/add')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    if 'C9_USER' in os.environ:
+        app.run(
+            debug=True,
+            host=os.getenv('IP', '0.0.0.0'),
+            port=int(os.getenv('PORT', 8080))
+        )
+    else:
+        app.run(debug=True)
