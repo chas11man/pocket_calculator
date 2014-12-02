@@ -1,0 +1,48 @@
+body {
+	background-color: #dadada
+}
+
+button {
+    padding: 0;
+    width: 60px;
+    height: 60px;
+    background: #3498db;
+    border: solid #1f628d 3px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: x-large;
+}
+
+button:hover {
+	background: #3cb0fd;
+}
+
+table {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#screen {
+	background: #3498db;
+	border: solid #1f628d 3px;
+	border-radius: 5px;
+    color: #fff;
+	height: 60px;
+	line-height: 60px;
+	padding: 0px 10px;
+}
+
+h1 {
+	margin: 0;
+	text-align: right;
+	font-family: "Courier New", Courier, monospace;
+}
+
+#memory {
+	margin: 0;
+	float: left;
+	font-family: "Courier New", Courier, monospace;
+	visibility: hidden;
+}

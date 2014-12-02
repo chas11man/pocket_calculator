@@ -4,6 +4,8 @@ var operator = '';
 var lastInput = $();
 var result = '';
 
+// Button press handler
+
 $(document).ready(function() {
 	$(':button').click(function() {
 
@@ -110,6 +112,7 @@ $(document).ready(function() {
 			if (displayNum() !== 0 && !lastInput.hasClass('opr')) {
 				changeDisplay('neg');
 			}
+
 		} else if ($(this).hasClass('mem')) {
 			switch ($(this).attr('id')) {
 				case 'mcl':
@@ -138,39 +141,7 @@ $(document).ready(function() {
 	});
 });
 
-function displayNum() {
-	return +($('#display').text());
-}
-
-function displayTxt() {
-	return $('#display').text();
-}
-
-function hasDecimal(number) {
-	if (arguments.length == 1) {
-		text = number.toString();
-	} else {
-		text = $('#display').text();
-	}
-
-	if (text.indexOf('.') === -1) {
-		return false;
-	}
-	return true;
-}
-
-function isNegative(number) {
-	if (arguments.length == 1) {
-		text = number.toString();
-	} else {
-		text = $('#display').text();
-	}
-
-	if (text.indexOf('-') === 0) {
-		return true;
-	}
-	return false;
-}
+// Display proper output
 
 function changeDisplay(input) {
 	input = input.toString();
@@ -194,7 +165,12 @@ function changeDisplay(input) {
 		newDisp = displayTxt() + input;
 	}
 
+	formatOutput(newDisp);
+}
+
+function formatOutput(newDisp) {
 	var digits = 10;
+
 	if (isNegative(newDisp)) {
 		digits++;
 	}
@@ -202,8 +178,50 @@ function changeDisplay(input) {
 		digits++;
 	}
 
+	if (newDisp.length > digits) {
+		newDisp = sciNotation(newDisp);
+	}
+
 	$('#display').text(newDisp.substring(0, digits));
 }
+
+// Helper functions
+
+function displayNum() {
+	return +($('#display').text());
+}
+
+function displayTxt() {
+	return $('#display').text();
+}
+
+function hasDecimal(number) {
+	if (arguments.length == 1) {
+		text = number.toString();
+	} else {
+		text = displayTxt();
+	}
+
+	if (text.indexOf('.') === -1) {
+		return false;
+	}
+	return true;
+}
+
+function isNegative(number) {
+	if (arguments.length == 1) {
+		text = number.toString();
+	} else {
+		text = displayTxt();
+	}
+
+	if (text.indexOf('-') === 0) {
+		return true;
+	}
+	return false;
+}
+
+// API caller functions
 
 function add(a, b) {
 	var addResult = null;
@@ -281,4 +299,17 @@ function percent(a, b) {
 		}
 	});
 	return perResult;
+}
+
+function sciNotation(a) {
+	var sciResult = null;
+	$.ajax({
+		url: '/sci_notation',
+		data: {a: a},
+		async: false,
+		success: function(data) {
+			sciResult = data['result'];
+		}
+	});
+	return sciResult;
 }

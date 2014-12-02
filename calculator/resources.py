@@ -1,16 +1,9 @@
-import os
-
 from decimal import *
-from flask import Flask, render_template, request
-from flask.ext.restful import Resource, Api
+from flask import request
+from flask.ext.restful import Resource
 
-app = Flask(__name__)
-api = Api(app)
-
-
-@app.route("/")
-def calculator():
-    return render_template('calculator.html')
+__all__ = ['Add', 'Subtract', 'Multiply', 'Divide',
+           'SquareRoot', 'Percent', 'SciNotation']
 
 
 class Add(Resource):
@@ -65,19 +58,10 @@ class Percent(Resource):
         result = (b / 100) * a
         return {'result': float(result)}
 
-api.add_resource(Add, '/add')
-api.add_resource(Subtract, '/subtract')
-api.add_resource(Multiply, '/multiply')
-api.add_resource(Divide, '/divide')
-api.add_resource(SquareRoot, '/square_root')
-api.add_resource(Percent, '/percent')
 
-if __name__ == "__main__":
-    if 'C9_USER' in os.environ:
-        app.run(
-            debug=True,
-            host=os.getenv('IP', '0.0.0.0'),
-            port=int(os.getenv('PORT', 8080))
-        )
-    else:
-        app.run(debug=True)
+class SciNotation(Resource):
+
+    def get(self):
+        a = Decimal(request.args.get('a'))
+        result = "{:.2e}".format(a)
+        return {'result': result}
