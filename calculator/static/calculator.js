@@ -34,22 +34,7 @@ $(document).ready(function() {
 			result = '';
 			switch ($(this).attr('id')) {
 				case 'equ':
-					switch (operator) {
-						case '+':
-							result = add(lastNum, displayNum());
-							break;
-						case '-':
-							result = subtract(lastNum, displayNum());
-							break;
-						case 'x':
-							result = multiply(lastNum, displayNum());
-							break;
-						case '/':
-							result = divide(lastNum, displayNum());
-							break;
-						default:
-							result = displayNum();
-					}
+					result = checkLastOperator();
 
 					if (lastInput.attr('id') != 'equ') {
 						lastNum = displayNum();
@@ -57,42 +42,22 @@ $(document).ready(function() {
 					break;
 
 				case 'add':
-					if (lastNum === 0 || lastInput.hasClass('opr')) {
-						lastNum = displayNum();
-					} else {
-						result = add(lastNum, displayNum());
-						lastNum = result;
-					}
+					defaultOperator();
 					operator = '+';
 					break;
 
 				case 'sub':
-					if (lastNum === 0 || lastInput.hasClass('opr')) {
-						lastNum = displayNum();
-					} else {
-						result = subtract(lastNum, displayNum());
-						lastNum = result;
-					}
+					defaultOperator();
 					operator = '-';
 					break;
 
 				case 'mul':
-					if (lastNum === 0 || lastInput.hasClass('opr')) {
-						lastNum = displayNum();
-					} else {
-						result = multiply(lastNum, displayNum());
-						lastNum = result;
-					}
+					defaultOperator();
 					operator = 'x';
 					break;
 
 				case 'div':
-					if (lastNum === 0 || lastInput.hasClass('opr')) {
-						lastNum = displayNum();
-					} else {
-						result = divide(lastNum, displayNum());
-						lastNum = result;
-					}
+					defaultOperator();
 					operator = '/';
 					break;
 
@@ -236,6 +201,35 @@ function isNegative(number) {
 		return true;
 	} else {
 		return false;
+	}
+}
+
+function checkLastOperator() {
+	switch (operator) {
+		case '+':
+			return add(lastNum, displayNum());
+			break;
+		case '-':
+			return subtract(lastNum, displayNum());
+			break;
+		case 'x':
+			return multiply(lastNum, displayNum());
+			break;
+		case '/':
+			return divide(lastNum, displayNum());
+			break;
+		default:
+			return displayNum();
+			break;
+	}
+}
+
+function defaultOperator() {
+	if (lastNum === 0 || lastInput.hasClass('opr')) {
+		lastNum = displayNum();
+	} else {
+		result = checkLastOperator();
+		lastNum = result;
 	}
 }
 
