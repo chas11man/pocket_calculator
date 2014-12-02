@@ -4,20 +4,23 @@ var operator = '';
 var lastInput = $();
 var result = '';
 
-// Button press handler
+/**
+ *  Button press logic handler
+ */
 
 $(document).ready(function() {
 	$(':button').click(function() {
 
+		// Numbers and decimal
 		if ($(this).hasClass('num')) {
 			if (lastInput.attr('id') == 'equ') {
 				lastNum = 0;
 				operator = '';
 			}
 			changeDisplay($(this).text());
-
 			lastInput = $(this);
 
+		// C or CE
 		} else if ($(this).hasClass('clr')) {
 			if ($(this).attr('id') == 'clr') {
 				lastNum = 0;
@@ -26,6 +29,7 @@ $(document).ready(function() {
 			}
 			changeDisplay('clr');
 
+		// Operators: =, +, -, *, /, %, sqrRoot
 		} else if ($(this).hasClass('opr')) {
 			result = '';
 			switch ($(this).attr('id')) {
@@ -97,22 +101,26 @@ $(document).ready(function() {
 					break;
 
 				case 'per':
-					result = percent(lastNum, displayNum());
+					if (lastNum !== 0) {
+						result = percent(lastNum, displayNum());
+					}
 					break;
 
 				default:
-					console.log('fix something');
+					console.log("Something's broken, fix it!");
 					break;
 			}
 
 			lastInput = $(this);
 			changeDisplay(result);
 
+		// +/-
 		} else if ($(this).hasClass('neg')) {
 			if (displayNum() !== 0 && !lastInput.hasClass('opr')) {
 				changeDisplay('neg');
 			}
 
+		// Memory: MC, MR, M+, M-
 		} else if ($(this).hasClass('mem')) {
 			switch ($(this).attr('id')) {
 				case 'mcl':
@@ -141,51 +149,54 @@ $(document).ready(function() {
 	});
 });
 
-// Display proper output
+/**
+ * Display handlers
+ */
 
 function changeDisplay(input) {
 	input = input.toString();
 	var newDisp;
 
+	// Clear display
 	if (input == 'clr') {
 		newDisp = '0';
+
+	// Decimal button
 	} else if (input == '.') {
 		if (!hasDecimal()) {
 			newDisp = displayTxt() + input;
 		}
+
+	// +/- button
 	} else if (input == 'neg') {
 		if (isNegative()) {
 			newDisp = displayTxt().substring(1);
 		} else {
 			newDisp = '-' + displayTxt();
 		}
-	} else if (input.length && (displayNum() === 0 || lastInput.hasClass('opr') || lastInput.hasClass('mem'))) {
+
+	// If a fresh input or if display can be cleared
+	} else if ( input.length > 0 && (
+					(displayNum() === 0 && !hasDecimal()) ||
+					lastInput.hasClass('opr') ||
+					lastInput.hasClass('mem'))) {
 		newDisp = input;
+
+	// Number buttons
 	} else {
 		newDisp = displayTxt() + input;
 	}
 
-	formatOutput(newDisp);
-}
-
-function formatOutput(newDisp) {
 	var digits = 10;
-
-	if (isNegative(newDisp)) {
-		digits++;
-	}
-	if (hasDecimal(newDisp)) {
-		digits++;
-	}
-
-	if (newDisp.length > digits) {
-		newDisp = sciNotation(newDisp);
-	}
+	if (isNegative(newDisp)) { digits++; }
+	if (hasDecimal(newDisp)) { digits++; }
 
 	$('#display').text(newDisp.substring(0, digits));
 }
 
-// Helper functions
+/**
+ * Helper functions
+ */
 
 function displayNum() {
 	return +($('#display').text());
@@ -193,6 +204,11 @@ function displayNum() {
 
 function displayTxt() {
 	return $('#display').text();
+}
+
+function toScientific(number) {
+	number = +(number);
+	return number.toExponential(2);
 }
 
 function hasDecimal(number) {
@@ -204,8 +220,9 @@ function hasDecimal(number) {
 
 	if (text.indexOf('.') === -1) {
 		return false;
+	} else {
+		return true;
 	}
-	return true;
 }
 
 function isNegative(number) {
@@ -217,11 +234,14 @@ function isNegative(number) {
 
 	if (text.indexOf('-') === 0) {
 		return true;
+	} else {
+		return false;
 	}
-	return false;
 }
 
-// API caller functions
+/**
+ * API caller functions
+ */
 
 function add(a, b) {
 	var addResult = null;
@@ -299,17 +319,4 @@ function percent(a, b) {
 		}
 	});
 	return perResult;
-}
-
-function sciNotation(a) {
-	var sciResult = null;
-	$.ajax({
-		url: '/sci_notation',
-		data: {a: a},
-		async: false,
-		success: function(data) {
-			sciResult = data['result'];
-		}
-	});
-	return sciResult;
 }
