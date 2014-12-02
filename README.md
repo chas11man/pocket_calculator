@@ -1,4 +1,5 @@
 # Pocket Calculator
+This is a web based pocket calculator. It functions exactly the same as every other pocket calculator.
 ### Installation
 This project runs on Flask 0.10.1 and Python 2.7.6. It is recommended that you run this in a virtualenv.
 
