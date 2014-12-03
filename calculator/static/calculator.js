@@ -62,12 +62,12 @@ $(document).ready(function() {
 					break;
 
 				case 'sqr':
-					result = squareRoot(displayNum());
+					result = calc('/square_root', displayNum());
 					break;
 
 				case 'per':
 					if (lastNum !== 0) {
-						result = percent(lastNum, displayNum());
+						result = calc('/percent', lastNum, displayNum());
 					}
 					break;
 
@@ -98,10 +98,10 @@ $(document).ready(function() {
 					}
 					break;
 				case 'mpl':
-					memory = add(memory, displayNum());
+					memory = calc('/add', memory, displayNum());
 					break;
 				case 'mmi':
-					memory = subtract(memory, displayNum());
+					memory = calc('/subtract', memory, displayNum());
 					break;
 			}
 
@@ -207,16 +207,16 @@ function isNegative(number) {
 function checkLastOperator() {
 	switch (operator) {
 		case '+':
-			return add(lastNum, displayNum());
+			return calc('/add', lastNum, displayNum());
 			break;
 		case '-':
-			return subtract(lastNum, displayNum());
+			return calc('/subtract', lastNum, displayNum());
 			break;
 		case 'x':
-			return multiply(lastNum, displayNum());
+			return calc('/multiply', lastNum, displayNum());
 			break;
 		case '/':
-			return divide(lastNum, displayNum());
+			return calc('/divide', lastNum, displayNum());
 			break;
 		default:
 			return displayNum();
@@ -234,83 +234,26 @@ function defaultOperator() {
 }
 
 /**
- * API caller functions
+ * API call function
  */
 
-function add(a, b) {
-	var addResult = null;
-	$.ajax({
-		url: '/add',
-		data: {a: a, b: b},
-		async: false,
-		success: function(data) {
-			addResult = data['result'];
-		}
-	});
-	return addResult;
-}
+function calc(url, a, b) {
+	var calcResult;
 
-function subtract(a, b) {
-	var subResult = null;
-	$.ajax({
-		url: '/subtract',
-		data: {a: a, b: b},
-		async: false,
-		success: function(data) {
-			subResult = data['result'];
-		}
-	});
-	return subResult;
-}
+	if (arguments.length == 3) {
+		numbers = {a: a, b: b};
+	} else {
+		numbers = {a: a};
+	}
 
-function multiply(a, b) {
-	var mulResult = null;
 	$.ajax({
-		url: '/multiply',
-		data: {a: a, b: b},
+		url: url,
+		data: numbers,
 		async: false,
 		success: function(data) {
-			mulResult = data['result'];
+			calcResult = data['result'];
 		}
 	});
-	return mulResult;
-}
 
-function divide(a, b) {
-	var divResult = null;
-	$.ajax({
-		url: '/divide',
-		data: {a: a, b: b},
-		async: false,
-		success: function(data) {
-			divResult = data['result'];
-		}
-	});
-	return divResult;
-}
-
-function squareRoot(a) {
-	var sqrResult = null;
-	$.ajax({
-		url: '/square_root',
-		data: {a: a},
-		async: false,
-		success: function(data) {
-			sqrResult = data['result'];
-		}
-	});
-	return sqrResult;
-}
-
-function percent(a, b) {
-	var perResult = null;
-	$.ajax({
-		url: '/percent',
-		data: {a: a, b: b},
-		async: false,
-		success: function(data) {
-			perResult = data['result'];
-		}
-	});
-	return perResult;
+	return calcResult;
 }
